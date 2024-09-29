@@ -2,6 +2,7 @@
 
 ## [Docs](./docs/)
 
+* [GORM query conditions](./docs/conditions.md)
 * [GORM tags](./docs/gorm-tags.md)
 
 ## Examples
