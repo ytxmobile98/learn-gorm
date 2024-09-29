@@ -35,3 +35,13 @@ db.Where("updated_at > ?", lastWeek).Find(&users)
 db.Where("created_at BETWEEN ? AND ?", lastWeek, today).Find(&users)
 // SELECT * FROM users WHERE created_at BETWEEN '2000-01-01 00:00:00' AND '2000-01-08 00:00:00';
 ```
+
+> **Note:** If the object's primary key has been set, then the condition query will NOT overwrite the primary key value, but instead use it as an `AND` condition. This will result in a `record not found` error.
+>
+> ```go
+> var user = User{ID: 10}
+> db.Where("id = ?", 20).First(&user)
+> // SELECT * FROM users WHERE id = 10 and id = 20 ORDER BY id ASC LIMIT 1
+> ```
+>
+> So you need to first set the first primary key attribute to nil or zero value, before using the variable to get new information from the database.
