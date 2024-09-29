@@ -4,6 +4,7 @@
 * [Struct & Map Conditions](#struct--map-conditions)
 * [Inline Conditions](#inline-conditions)
 * [`NOT` Conditions](#not-conditions)
+* [`OR` Conditions](#or-conditions)
 
 ## String Conditions
 
@@ -130,4 +131,19 @@ db.Not(User{Name: "jinzhu", Age: 18}).First(&user)
 // Not In slice of primary keys
 db.Not([]int64{1,2,3}).First(&user)
 // SELECT * FROM users WHERE id NOT IN (1,2,3) ORDER BY id LIMIT 1;
+```
+
+## `OR` Conditions
+
+```go
+db.Where("role = ?", "admin").Or("role = ?", "super_admin").Find(&users)
+// SELECT * FROM users WHERE role = 'admin' OR role = 'super_admin';
+
+// Struct
+db.Where("name = 'jinzhu'").Or(User{Name: "jinzhu 2", Age: 18}).Find(&users)
+// SELECT * FROM users WHERE name = 'jinzhu' OR (name = 'jinzhu 2' AND age = 18);
+
+// Map
+db.Where("name = 'jinzhu'").Or(map[string]interface{}{"name": "jinzhu 2", "age": 18}).Find(&users)
+// SELECT * FROM users WHERE name = 'jinzhu' OR (name = 'jinzhu 2' AND age = 18);
 ```
