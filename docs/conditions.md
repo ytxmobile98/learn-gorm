@@ -2,6 +2,7 @@
 
 * [String Conditions](#string-conditions)
 * [Struct & Map Conditions](#struct--map-conditions)
+* [Inline Conditions](#inline-conditions)
 
 ## String Conditions
 
@@ -83,4 +84,28 @@ db.Where(&User{Name: "jinzhu"}, "name", "Age").Find(&users)
 
 db.Where(&User{Name: "jinzhu"}, "Age").Find(&users)
 // SELECT * FROM users WHERE age = 0;
+```
+
+## Inline Conditions
+
+Query conditions can be inlined into methods like `First` and `Find` in a similar way to `Where`:
+
+```go
+// Get by primary key if it were a non-integer type
+db.First(&user, "id = ?", "string_primary_key")
+
+// Plain SQL
+db.Find(&user, "name = ?", "jinzhu")
+// SELECT * FROM users WHERE name = "jinzhu";
+
+db.Find(&users, "name <> ? AND age > ?", "jinzhu", 20)
+// SELECT * FROM users WHERE name <> "jinzhu" AND age > 20;
+
+// Struct
+db.Find(&users, User{Age: 20})
+// SELECT * FROM users WHERE age = 20;
+
+// Map
+db.Find(&users, map[string]interface{}{"age": 20})
+// SELECT * FROM users WHERE age = 20;
 ```
