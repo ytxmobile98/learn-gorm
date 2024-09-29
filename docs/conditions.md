@@ -1,6 +1,7 @@
 # GORM Conditions
 
 * [String Conditions](#string-conditions)
+* [Struct & Map Conditions](#struct--map-conditions)
 
 ## String Conditions
 
@@ -45,3 +46,41 @@ db.Where("created_at BETWEEN ? AND ?", lastWeek, today).Find(&users)
 > ```
 >
 > So you need to first set the first primary key attribute to nil or zero value, before using the variable to get new information from the database.
+
+## Struct & Map Conditions
+
+```go
+// Struct
+db.Where(&User{Name: "jinzhu", Age: 20}).First(&user)
+// SELECT * FROM users WHERE name = "jinzhu" AND age = 20 ORDER BY id LIMIT 1;
+
+// Map
+db.Where(map[string]interface{}{"name": "jinzhu", "age": 20}).Find(&users)
+// SELECT * FROM users WHERE name = "jinzhu" AND age = 20;
+
+// Slice of primary keys
+db.Where([]int64{20, 21, 22}).Find(&users)
+// SELECT * FROM users WHERE id IN (20, 21, 22);
+```
+
+> **Note:** When querying with structs, GORM will only consider non-zero fields but omit zero-fields. If you want to include zero fields as well, you can use a map.
+>
+> ```go
+> db.Where(&User{Name: "jinzhu", Age: 0}).Find(&users)
+> // SELECT * FROM users WHERE name = "jinzhu";
+>
+> db.Where(map[string]interface{}{"Name": "jinzhu", "Age": 0}).Find(&users)
+> // SELECT * FROM users WHERE name = "jinzhu" AND age = 0;
+> ```
+
+### Specify struct search fields
+
+When searching with struct, you can specify which particular values from the struct to use in the query conditions, by passing in the field name or the database name to `Where()`, for example:
+
+```go
+db.Where(&User{Name: "jinzhu"}, "name", "Age").Find(&users)
+// SELECT * FROM users WHERE name = "jinzhu" AND age = 0;
+
+db.Where(&User{Name: "jinzhu"}, "Age").Find(&users)
+// SELECT * FROM users WHERE age = 0;
+```
