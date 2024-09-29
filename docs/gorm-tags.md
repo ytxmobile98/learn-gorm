@@ -1,0 +1,27 @@
+# GORM tags
+
+> **Reference: <https://gorm.io/docs/models.html#Fields-Tags>**
+
+* `column` (column name)
+* `type` (column data type)
+* `serializer` (column data serializer)
+* `size` (column data size/length)
+* `primaryKey` (column is primary key)
+* `unique` (column values are unique)
+* `default` (column default value)
+* `precision` (column precision)
+* `scale` (column scale)
+* `not null` (column is not null)
+* `autoIncrement` (column is auto incrementable)
+* `autoIncrementIncrement` (auto increment steps)
+* `embedded` (embedded the field)
+* `embeddedPrefix` (column name prefix for embedded fields)
+* `autoCreateTime` (automatically track and update the creation time)
+* `autoUpdateTime` (automatically track and update the creation and update time)
+* `index` (create index with options)
+* `uniqueIndex` (create unique indexes)
+* `check` (creates check constraints)
+* `<-` (write permission)
+* `->` (read permission)
+* `-` (disable certain permissions: `-` no read/write, `-:migration` no migration, `-:all` no read/write/migration)
+* `comment` (comment for field when migration)
