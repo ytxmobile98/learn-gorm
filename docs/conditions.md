@@ -3,6 +3,7 @@
 * [String Conditions](#string-conditions)
 * [Struct & Map Conditions](#struct--map-conditions)
 * [Inline Conditions](#inline-conditions)
+* [`NOT` Conditions](#not-conditions)
 
 ## String Conditions
 
@@ -108,4 +109,25 @@ db.Find(&users, User{Age: 20})
 // Map
 db.Find(&users, map[string]interface{}{"age": 20})
 // SELECT * FROM users WHERE age = 20;
+```
+
+## `NOT` Conditions
+
+Build `NOT` conditions, similar to `WHERE` conditions:
+
+```go
+db.Not("name = ?", "jinzhu").First(&user)
+// SELECT * FROM users WHERE NOT name = "jinzhu" ORDER BY id LIMIT 1;
+
+// Not In
+db.Not(map[string]interface{}{"name": []string{"jinzhu", "jinzhu 2"}}).Find(&users)
+// SELECT * FROM users WHERE name NOT IN ("jinzhu", "jinzhu 2");
+
+// Struct
+db.Not(User{Name: "jinzhu", Age: 18}).First(&user)
+// SELECT * FROM users WHERE name <> "jinzhu" AND age <> 18 ORDER BY id LIMIT 1;
+
+// Not In slice of primary keys
+db.Not([]int64{1,2,3}).First(&user)
+// SELECT * FROM users WHERE id NOT IN (1,2,3) ORDER BY id LIMIT 1;
 ```
